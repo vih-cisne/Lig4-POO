@@ -1,4 +1,5 @@
-
+import {Cell} from "./cell_model.js"
+//import { Player } from "./player_model.js"
 export class Board {
     constructor(columns, rows, players) {
         this._columns = columns
@@ -72,7 +73,7 @@ export class Board {
               column.classList.add('column')
               column.style.width = `${100/this.columns}%`
               column.dataset.column = indexColuna
-              column.addEventListener('click', () => {"Adicionaremos uma função de click futuramente"})
+              column.addEventListener('click', () => this.handleClick(indexColuna))
       
               for(let indexLinha = 0; indexLinha < this.rows; indexLinha++) {
                   const celula = document.createElement('div')
@@ -84,7 +85,147 @@ export class Board {
       
               container.appendChild(column)
           }
-      }
+    }
+
+    switchPlayer() {
+        const playerCurrent = this.players.indexOf(this.currentPlayer)
+        const playerNext = (playerCurrent + 1)%this.players.length
+        this.currentPlayer = this.players[playerNext]
+    }
+//verificar onde esta funcao deve ficar
+    handleClick(column) {
+        //let coluna=column.dataset.column
+        let row = this.map.findIndex(row => row[column])
+    
+        if(row === -1) {
+            row = this.rows
+        }
+
+        
+        this.map[row - 1][column] = this.currentPlayer
+        console.log(this.map[row - 1][column])
+        //console.log(this.map[row - 1][coluna])
+        //console.log(this.map[row - 1])
+    
+        const cell = new Cell(column, row, this.currentPlayer.className)
+        
+        //cell.render()
+        
+        //this.switchPlayer()
+
+        cell.render()
+        if(this.isWinnableMove(column,row-1)) {
+         console.log(`${this.currentPlayer.name} ganhou`)
+        }
+        this.switchPlayer()
+    }
+
+    isWinnableMove(column, row) {
+        return  this.checkVertical(column, row)|| 
+                this.checkHorizontal(column, row) || 
+                this.checkDiagonalToLeft(column,row) ||
+                this.checkDiagonalToRight(column,row)
+    }
+
+    checkVertical(column, row) {
+        let end = row + 3
+    
+        if(end >= this.rows){
+            end = this.rows -1
+        }
+    
+        let counter = 0
+        for (let index = row; index <= end; index++) {
+            if(this.map[index][column] === this.currentPlayer) {
+                counter++
+            } else {
+                counter = 0
+            }
+            if (counter === 4) {
+                return true
+            }
+        }
+        return false
+    }
+
+    checkHorizontal(column, row) {
+        let end = column + 3
+    
+        if(end >= this.columns){
+            end = this.columns -1
+        }
+    
+        let counter = 0
+        for (let index = column; index <= end; index++) {
+            if(this.map[row][index] === this.currentPlayer) {
+                counter++
+            } else {
+                counter = 0
+            }
+            if (counter === 4) {
+                return true
+            }
+        }
+        return false
+    }
+
+    checkDiagonalToRight(column,row) {
+        let end = column - 3
+    
+        if(end <= 0){
+            end = 0
+        }
+
+        let indexRow=row
+     
+        let counter = 0
+        for (let indexColumn = column; indexColumn >= end; indexColumn--) {
+            if(indexRow>=this.rows) {
+                break
+            }
+            if(this.map[indexRow][indexColumn] === this.currentPlayer) {
+                counter++
+            } else {
+                counter = 0
+            }
+            if (counter === 4) {
+                return true
+            }
+            indexRow++
+        }
+        return false
+
+    }
+
+    checkDiagonalToLeft(column,row) {
+        let end = column + 3
+    
+        if(end >= this.columns){
+            end = this.columns -1
+        }
+
+        let indexRow=row
+    
+        let counter = 0
+        for (let indexColumn = column; indexColumn <= end; indexColumn++) {
+            if(indexRow>=this.rows) {
+                break
+            }
+            if(this.map[indexRow][indexColumn] === this.currentPlayer) {
+                counter++
+            } else {
+                counter = 0
+            }
+            if (counter === 4) {
+                return true
+            }
+            indexRow++
+        }
+        return false
+
+    }
+
+
 }
 
   
