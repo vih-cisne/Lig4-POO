@@ -3,11 +3,12 @@ import {Board} from "../models/board_model.js"
 
   let jogar=document.querySelector('#jogadores')
   jogar.addEventListener('click',function() {
-    let player1=new Player(document.getElementsByName('name1')[0].value,'player1')
-    let player2=new Player(document.getElementsByName('name2')[0].value,'player2')
+    let player1=new Player(document.getElementsByName('name1')[0].value||'Player1','player1')
+    let player2=new Player(document.getElementsByName('name2')[0].value||'Player2','player2')
+    let celulas=document.getElementsByName('celulas')[0].value
     let players=[player1,player2]
 
-    let board = new Board(6,6,players)
+    let board = new Board(celulas,celulas,players)
     const container = document.getElementById('table')
     board.renderMap(container)
 
