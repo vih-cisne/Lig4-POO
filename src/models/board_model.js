@@ -4,9 +4,20 @@ export class Board {
     constructor(columns, rows, players) {
         this._columns = columns
         this._rows = rows
-        this._map = this.createEmptyMap()
+        this._map = []
         this._players = players
         this._currentPlayer = this._players[0]
+    }
+
+    confirmReload(element) {
+        if(element.id='sim') {
+            document.querySelector('body').removeChild(modal)
+            document.querySelector('main').style.opacity='1'
+
+            console.log('reload')
+            const container = document.getElementById('table')
+            this.renderMap(container)
+        }
     }
 
     get columns() {
@@ -29,8 +40,8 @@ export class Board {
         return this._map
     }   
       
-    set map(_) {
-        throw 'Cant change this value'
+    set map(array) {
+        this._map=array
     }
       
     get players() {
@@ -65,6 +76,15 @@ export class Board {
       }
     
     renderMap(container) {
+        this.map=this.createEmptyMap()
+
+        const player1=document.querySelector('#player1')
+        player1.innerText=this.players[0].name
+
+        const player2=document.querySelector('#player2')
+        player2.innerText=this.players[1].name
+        const mostrador=document.querySelector('#mostrador')
+        mostrador.innerText=`Vez de ${this.currentPlayer.name}`
     
           container.innerText = ''
           
@@ -73,7 +93,7 @@ export class Board {
               column.classList.add('column')
               column.style.width = `${100/this.columns}%`
               column.dataset.column = indexColuna
-              column.addEventListener('click', () => this.handleClick(indexColuna))
+              column.addEventListener('click', (e) => this.handleClick(e,indexColuna))
       
               for(let indexLinha = 0; indexLinha < this.rows; indexLinha++) {
                   const celula = document.createElement('div')
@@ -91,33 +111,47 @@ export class Board {
         const playerCurrent = this.players.indexOf(this.currentPlayer)
         const playerNext = (playerCurrent + 1)%this.players.length
         this.currentPlayer = this.players[playerNext]
+        const mostrador=document.querySelector('#mostrador')
+        mostrador.innerText=`Vez de ${this.currentPlayer.name}`
     }
 //verificar onde esta funcao deve ficar
-    handleClick(column) {
-        //let coluna=column.dataset.column
-        let row = this.map.findIndex(row => row[column])
+    handleClick(e,column) {
+        const element = e.target;
     
-        if(row === -1) {
+        if (element.tagName === "BUTTON") {
+            this.confirmReload(element)
+        }else {
+            let row = this.map.findIndex(row => row[column])
+    
+            if(row === -1) {
             row = this.rows
-        }
+            }
 
         
-        this.map[row - 1][column] = this.currentPlayer
-        console.log(this.map[row - 1][column])
+            this.map[row - 1][column] = this.currentPlayer
+            console.log(this.map[row - 1][column])
         //console.log(this.map[row - 1][coluna])
         //console.log(this.map[row - 1])
     
-        const cell = new Cell(column, row, this.currentPlayer.className)
+            const cell = new Cell(column, row, this.currentPlayer.className)
         
         //cell.render()
         
         //this.switchPlayer()
 
-        cell.render()
-        if(this.isWinnableMove(column,row-1)) {
-         console.log(`${this.currentPlayer.name} ganhou`)
+            cell.render()
+            if(this.isWinnableMove(column,row-1)) {
+                const mostrador=document.querySelector('#mostrador')
+                console.log(`${this.currentPlayer.name} ganhou`)
+                mostrador.innerText=`${this.currentPlayer.name} ganhou`
+                this.jogarNovamente()
+            } else {
+                this.switchPlayer()
+            }
+
         }
-        this.switchPlayer()
+        //let coluna=column.dataset.column
+        
     }
 
     isWinnableMove(column, row) {
@@ -223,6 +257,28 @@ export class Board {
         }
         return false
 
+    }
+
+    jogarNovamente() {
+        const modal=document.createElement('div')
+        modal.id='modal'
+        const msg=document.createElement('p')
+        msg.innerText='Jogar novamente?'
+        const confirm=document.createElement('div')
+        const buttonS=document.createElement('button')
+        buttonS.innerText='SIM'
+        buttonS.id='sim'
+        const buttonN=document.createElement('button')
+        buttonN.innerText='NÃO'
+        confirm.append(buttonN)
+        confirm.append(buttonS)
+        modal.append(msg)
+        modal.append(confirm)
+
+        document.querySelector('body').append(modal)
+        document.querySelector('main').style.opacity='0.5'
+
+        buttonS.addEventListener('click',(e) => this.handleClick(e))
     }
 
 

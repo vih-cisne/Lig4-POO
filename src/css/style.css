@@ -1,5 +1,49 @@
 * {
     box-sizing: border-box;
+    background-color: rgb(41, 57, 61);
+  }
+
+  body {
+    height: 100vh;
+  }
+
+  header {
+    height: 15vh;
+  }
+
+  h2 {
+    height: 100%;
+    text-align: center;
+    padding: 40px 0px;
+  }
+  main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  figure {
+    width: 200px;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  img {
+    width: 150px;
+    height: 210px;
+  }
+
+  #kenziene {
+    width: 200px;
+    height: 200px;
+  }
+
+  p {
+    text-align: center;
+    font-size: large;
+    font-weight: bolder;
   }
   
   #table {
@@ -25,9 +69,59 @@
   }
   
   .player1 {
-    background-color: black;
+    background-color: rgb(42, 93, 134);
   }
   
   .player2 {
-    background-color: brown;
+    
+    background-color: rgb(3, 22, 56);
+  }
+
+  #modal {
+    position: absolute;
+    top: 35vh;
+    right: 45vw;
+    width: 10vw;
+    height: 15vh;
+    background-color: aliceblue;
+  }
+
+  #modal p {
+    background-color: aliceblue;
+    height: 40%;
+  }
+
+  #modal div {
+    background-color: aliceblue;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+  }
+
+  #nomes {
+    background-color: aliceblue;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    width: 300px;
+    height: 200px;
+    position: absolute;
+  }
+
+  #nomes button{
+    width: 40%;
+    background-color: blue;
+    color: aliceblue;
+    
+  }
+
+
+  #nomes input {
+    background-color: rgb(147, 199, 241);
+    text-align: center;
+  }
+
+  #nomes label {
+    background-color: aliceblue;
   }
